@@ -1,4 +1,4 @@
-package com.github.mateuszrasinski.udemy.kafka.beginnerscourse;
+package com.github.mateuszrasinski.udemy.kafka.beginnerscourse.basics;
 
 import org.apache.kafka.clients.consumer.ConsumerConfig;
 import org.apache.kafka.clients.consumer.ConsumerRecord;
@@ -14,13 +14,13 @@ import java.util.Properties;
 
 import static java.time.temporal.ChronoUnit.MILLIS;
 
-class ConsumerDemo {
+class ConsumerDemoGroups {
     public static void main(String[] args) {
 
-        final Logger logger = LoggerFactory.getLogger(ConsumerDemo.class);
+        final Logger logger = LoggerFactory.getLogger(ConsumerDemoGroups.class);
 
         String bootstrapServers = "localhost:9092";
-        String groupId = "my-fourth-application";
+        String groupId = "my-fifth-application";
         String topic = "first_topic";
 
         // create consumer properties

@@ -1,4 +1,4 @@
-package com.github.mateuszrasinski.udemy.kafka.beginnerscourse;
+package com.github.mateuszrasinski.udemy.kafka.beginnerscourse.basics;
 
 import org.apache.kafka.clients.producer.KafkaProducer;
 import org.apache.kafka.clients.producer.ProducerConfig;
