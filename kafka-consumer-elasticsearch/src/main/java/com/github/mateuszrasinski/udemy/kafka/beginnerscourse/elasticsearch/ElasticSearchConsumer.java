@@ -1,5 +1,6 @@
 package com.github.mateuszrasinski.udemy.kafka.beginnerscourse.elasticsearch;
 
+import com.google.gson.JsonParser;
 import org.apache.http.HttpHost;
 import org.apache.http.auth.AuthScope;
 import org.apache.http.auth.UsernamePasswordCredentials;
@@ -45,15 +46,23 @@ class ElasticSearchConsumer {
             ConsumerRecords<String, String> records = consumer.poll(Duration.of(100, MILLIS));
 
             for (ConsumerRecord<String, String> record : records) {
+
+                // 2 strategies
+                // Kafka generic ID
+                // String id = record.topic() + "_" + record.partition() + "_" + record.offset();
+
+                // Twitter feed specific id
+                String id = extractIdFromTweet(record.value());
+
                 // where we insert data into ElasticSearch
                 IndexRequest indexRequest = new IndexRequest(
                         "twitter",
-                        "tweets"
+                        "tweets",
+                        id // this is to make the consumer idempotent
                 ).source(record.value(), XContentType.JSON);
 
                 IndexResponse indexResponse = client.index(indexRequest, RequestOptions.DEFAULT);
-                String id = indexResponse.getId();
-                logger.info(id);
+                logger.info(indexResponse.getId());
                 try {
                     Thread.sleep(1000);
                 } catch (InterruptedException e) {
@@ -112,5 +121,12 @@ class ElasticSearchConsumer {
             logger.error("Cannot load secret.properties", e);
         }
         return properties;
+    }
+
+    private static String extractIdFromTweet(String tweetJson) {
+        return JsonParser.parseString(tweetJson)
+                         .getAsJsonObject()
+                         .get("id_str")
+                         .getAsString();
     }
 }
